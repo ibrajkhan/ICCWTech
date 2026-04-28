@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import {
   ArrowRight,
   CheckCircle2,
@@ -8,21 +9,60 @@ import {
   Shield,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { sendEmail } from "../lib/emailjs";
 
 const Home = () => {
+  const [earlyAccessForm, setEarlyAccessForm] = useState({
+    name: "",
+    email: "",
+  });
+  const [earlyAccessStatus, setEarlyAccessStatus] = useState({
+    type: "",
+    message: "",
+  });
+  const [isSubmittingEarlyAccess, setIsSubmittingEarlyAccess] = useState(false);
+
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
+  const handleEarlyAccessChange = (event) => {
+    const { name, value } = event.target;
+    setEarlyAccessForm((currentForm) => ({
+      ...currentForm,
+      [name]: value,
+    }));
+  };
+
+  const handleEarlyAccessSubmit = async (event) => {
+    event.preventDefault();
+    setIsSubmittingEarlyAccess(true);
+    setEarlyAccessStatus({ type: "", message: "" });
+
+    try {
+      await sendEmail("earlyAccess", {
+        form_name: "Get early access",
+        user_name: earlyAccessForm.name,
+        user_email: earlyAccessForm.email,
+        reply_to: earlyAccessForm.email,
+      });
+
+      setEarlyAccessForm({ name: "", email: "" });
+      setEarlyAccessStatus({
+        type: "success",
+        message: "Thanks! Your demo request has been sent successfully.",
+      });
+    } catch (error) {
+      console.error("Early access form failed:", error);
+      setEarlyAccessStatus({
+        type: "error",
+        message:
+          "Sorry, we could not send your request right now. Please try again.",
+      });
+    } finally {
+      setIsSubmittingEarlyAccess(false);
+    }
   };
 
   return (
@@ -435,28 +475,49 @@ const Home = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
                 Get early access
               </h3>
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleEarlyAccessSubmit}>
                 <div>
                   <label className="sr-only">Name</label>
                   <input
                     type="text"
+                    name="name"
+                    value={earlyAccessForm.name}
+                    onChange={handleEarlyAccessChange}
                     placeholder="Full Name"
                     className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
+                    required
                   />
                 </div>
                 <div>
                   <label className="sr-only">Email</label>
                   <input
                     type="email"
+                    name="email"
+                    value={earlyAccessForm.email}
+                    onChange={handleEarlyAccessChange}
                     placeholder="Work Email"
                     className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
+                    required
                   />
                 </div>
+                {earlyAccessStatus.message && (
+                  <p
+                    className={`rounded-xl px-4 py-3 text-sm font-medium ${
+                      earlyAccessStatus.type === "success"
+                        ? "bg-green-50 text-green-700 border border-green-200"
+                        : "bg-red-50 text-red-700 border border-red-200"
+                    }`}
+                    role="status"
+                  >
+                    {earlyAccessStatus.message}
+                  </p>
+                )}
                 <button
                   type="submit"
-                  className="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md"
+                  disabled={isSubmittingEarlyAccess}
+                  className="w-full bg-brand-600 hover:bg-brand-700 disabled:bg-brand-300 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md"
                 >
-                  Request Demo
+                  {isSubmittingEarlyAccess ? "Sending..." : "Request Demo"}
                 </button>
               </form>
               <p className="text-center text-sm text-gray-500 mt-4">
