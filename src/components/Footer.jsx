@@ -33,7 +33,7 @@ const Footer = () => {
               to="/"
               className="text-2xl font-bold text-white tracking-tighter mb-4 block"
             >
-              ICCW<span className="text-brand-400">.</span>
+              ICCW<span className="text-brand-400">.</span> Tech
             </Link>
             <p className="text-gray-400 mb-6 leading-relaxed">
               Empowering businesses with custom software development, innovative
