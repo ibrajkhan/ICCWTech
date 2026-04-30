@@ -119,7 +119,7 @@ const Contact = () => {
                   <Phone className="w-6 h-6 text-brand-400 mr-4 mt-1" />
                   <div>
                     <h4 className="font-semibold mb-1">Phone</h4>
-                    <p className="text-brand-100">+91 96650808=749</p>
+                    <p className="text-brand-100">+91 9665080749</p>
                     <p className="text-brand-100 text-sm mt-1">
                       Mon-Fri, 9am - 6pm EST
                     </p>
