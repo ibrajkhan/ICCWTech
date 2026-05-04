@@ -132,6 +132,7 @@ const Contact = () => {
                     <h4 className="font-semibold mb-1">Email</h4>
                     <p className="text-brand-100">info@iccwtech.com</p>
                     <p className="text-brand-100">support@iccwtech.com</p>
+                    <p className="text-brand-100">sales@iccwtech.com</p>
                   </div>
                 </div>
               </div>
