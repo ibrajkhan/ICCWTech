@@ -191,8 +191,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} ICCW. All rights reserved. CEO:
-            Ibraj Khan
+            &copy; {new Date().getFullYear()} ICCW. All rights reserved.
           </p>
           <div className="flex space-x-6">
             <Link
